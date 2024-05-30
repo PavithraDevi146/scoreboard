@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+
+#define MAX_OVERS 20
+#define MAX_WICKETS 10
+
+// Structure to represent a cricket match
+typedef struct {
+    int totalOvers;
+    int totalWickets;
+    int oversCompleted;
+    int wicketsFallen;
+    int runsScored;
+} CricketMatch;
+
+// Function to initialize the cricket match
+void initializeMatch(CricketMatch *match, int overs) {
+    match->totalOvers = overs;
+    match->totalWickets = MAX_WICKETS;
+    match->oversCompleted = 0;
+    match->wicketsFallen = 0;
+    match->runsScored = 0;
+}
+
+// Function to simulate ball by ball action
+void simulateBall(CricketMatch *match) {
+    int runs = rand() % 7; // Generate random runs (0 to 6)
+    match->runsScored += runs;
+
+    if (runs > 0) {
+        printf("Runs scored: %d\n", runs);
+    } else {
+        printf("Wicket!\n");
+        match->wicketsFallen++;
+    }
+
+    match->oversCompleted++;
+
+    // Display match summary
+    printf("Overs: %d/%d   Wickets: %d/%d   Runs: %d\n\n",
+           match->oversCompleted, match->totalOvers,
+           match->wicketsFallen, match->totalWickets,
+           match->runsScored);
+
+    usleep(1000000); // Sleep for 1 second (simulate real-time updates)
+}
+
+int main() {
+    int overs;
+    printf("Enter number of overs: ");
+    scanf("%d", &overs);
+
+    CricketMatch match;
+
+    srand(time(NULL)); // Seed the random number generator
+
+    initializeMatch(&match, overs);
+
+    printf("Live Cricket Score:\n\n");
+
+    // Simulate ball by ball action until the match ends
+    while (match.oversCompleted < match.totalOvers && match.wicketsFallen < match.totalWickets) {
+        simulateBall(&match);
+    }
+
+    printf("Match over!\n");
+
+    return 0;
+}
